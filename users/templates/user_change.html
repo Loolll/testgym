@@ -1,0 +1,72 @@
+{% extends 'wrapper.html' %}
+{% load static %}
+{% block content %}
+<script>
+    document.getElementById('nav_link_main').className = 'nav-item';
+
+
+</script>
+
+<div class="row mt-5">
+    <div class="col-md-0">
+
+    </div>
+    <div class="container col-md-4 mt-5">
+        <h2 align="center"><b>Изменение информации</b></h2>
+
+        <h5 align="center"><b style="color: red">{{header}}</b></h5>
+        <hr>
+        <form action="/users/user/change/" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_soname">{{edit_form.soname.label}}</label>
+                {{edit_form.soname}}
+                <script>
+                    document.getElementById('id_soname').className = 'form-control';
+                    document.getElementById('id_soname').value = '{{user.soname}}';
+
+
+                </script>
+            </div>
+
+            <div class="form-group">
+                <label for="id_name">{{edit_form.name.label}}</label>
+                {{edit_form.name}}
+                <script>
+                    document.getElementById('id_name').className = 'form-control';
+                    document.getElementById('id_name').value = '{{user.name}}';
+
+
+                </script>
+            </div>
+
+            <div class="form-group">
+                <label for="id_phone">{{edit_form.phone.label}}</label>
+                {{edit_form.phone}}
+                <script>
+                    document.getElementById('id_phone').className = 'form-control';
+                    document.getElementById('id_phone').value = '{{user.phone}}';
+
+
+                </script>
+            </div>
+
+            <div class="form-group form-check">
+                {{edit_form.entity}}
+                <label class="form-check-label" for="id_entity">{{edit_form.entity.label}}</label>
+                <script>
+                    document.getElementById('id_entity').className = 'form-check-input';
+                    if ('{{user.entity}}' == 'True') {
+                        document.getElementById('id_entity').checked = 1;
+                    }
+                    else {
+                        document.getElementById('id_entity').checked = 0;
+                    }
+                </script>
+            </div>
+
+            <button type="submit" class="btn btn-danger">Изменить информацию</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,353 @@
+{% extends 'wrapper.html' %}
+{% load static %}
+{% block content %}
+
+<br><br><br>
+<div class="container" style="">
+    <div class="row" style="border: solid lightgrey 1.5px; border-bottom: solid lightgrey 4px">
+        <div class="col-md-3 mt-2">
+            <h4>Каталог</h4>
+        </div>
+        <div class="col-md-9 mt-2">
+            <form action="/" method="get">
+                <input type="hidden" name="category" value="" id="sh_category">
+                <input type="hidden" name="min_price" value="" id="sh_min_price">
+                <input type="hidden" name="max_price" value="" id="sh_max_price">
+                <input type="hidden" name="discount" value="" id="sh_discount">
+                <input type="hidden" name="min_count" value="" id="sh_min_count">
+                <input type="hidden" name="max_count" value="" id="sh_max_count">
+                <input type="hidden" name="brand" value="" id="sh_brand">
+                <input type="hidden" name="group_by" value="" id="sh_group_by">
+                <div class="form-group">
+                    <input name="search" type="text" placeholder="Поиск..." class="form-control">
+                </div>
+            </form>
+            <script>
+                var params = window.location.search.replace('?','').split('&').reduce(
+                                        function(p,e){
+                                            var a = e.split('=');
+                                            p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+                                            return p;
+                                        },
+                                        {});
+                document.getElementById('sh_category').value = params['category'];
+                document.getElementById('sh_min_price').value = params['min_price'];
+                document.getElementById('sh_max_price').value = params['max_price'];
+                document.getElementById('sh_discount').value = params['discount'];
+                document.getElementById('sh_min_count').value = params['min_count'];
+                document.getElementById('sh_max_count').value = params['max_count'];
+                document.getElementById('sh_brand').value = params['brand'];
+                document.getElementById('sh_group_by').value = params['group_by'];
+
+
+
+
+            </script>
+        </div>
+    </div>
+    <div class="row mt-1" style="border: solid lightgrey 1.5px; border-bottom: solid lightgrey 4px; font-weight: 700">
+        <div class="col-md-2">
+            <div class="dropdown">
+                <a class="dropdown-toggle" type="button" id="dropdownMenuButtonCategory"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Категория
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonCategory">
+                    {% for category in categories %}
+                    <a class="dropdown-item" href="" id="category_{{category.id}}">
+                        {{category.name}}
+                    </a>
+                    <script>
+                        url = window.location.href.slice(0,window.location.href.indexOf('\?'));
+                        document.getElementById('category_{{category.id}}').href =
+                            url + '?category={{category.id}}&min_price=' + params['min_price'] + '&max_price=' +
+                            params['max_price'] + '&discount=' + params['discount'] + '&min_count=' +
+                            params['min_count'] + '&max_count=' + params['max_count'] + '&brand=' + params['brand'] +
+                            '&group_by=' + params['group_by'] + '&search=' + params['search'];
+
+
+                    </script>
+                    {% endfor %}
+                    <script>
+                        category_id = '{{category_id}}';
+                        document.getElementById('category_' + category_id).style = 'color: blue';
+
+
+                    </script>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="dropdown">
+                <a class="dropdown-toggle" type="button" id="dropdownMenuButtonPrice"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Цена
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonPrice">
+                    <form action="/" method="get">
+                        <input type="hidden" name="category" value="" id="ph_category">
+                        <input type="hidden" name="discount" value="" id="ph_discount">
+                        <input type="hidden" name="min_count" value="" id="ph_min_count">
+                        <input type="hidden" name="max_count" value="" id="ph_max_count">
+                        <input type="hidden" name="brand" value="" id="ph_brand">
+                        <input type="hidden" name="group_by" value="" id="ph_group_by">
+                        <input type="hidden" name="search" value="" id="ph_search">
+
+                        <input type="number" placeholder="Минимальная" class="form-control" name="min_price">
+                        <input type="number" class="form-control" placeholder="Максимальная" name="max_price">
+                        <input type="submit" class="btn btn-info btn-sm btn-block" value="OK">
+                    </form>
+                    <script>
+                        document.getElementById('ph_category').value = params['category'];
+                        document.getElementById('ph_discount').value = params['discount'];
+                        document.getElementById('ph_min_count').value = params['min_count'];
+                        document.getElementById('ph_max_count').value = params['max_count'];
+                        document.getElementById('ph_brand').value = params['brand'];
+                        document.getElementById('ph_group_by').value = params['group_by'];
+                        document.getElementById('ph_search').value = params['search'];
+
+
+
+
+
+
+
+
+                    </script>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <a href="" class="text-dark" id="discount_a">
+                Акция
+            </a>
+            <script>
+                if (params['discount'] == 'True'){
+                    document.getElementById('discount_a').href = url +
+                        '?category='+ params['category'] + '&min_price=' + params['min_price'] + '&max_price=' +
+                        params['max_price'] + '&discount=' + 'False' + '&min_count=' +
+                        params['min_count'] + '&max_count=' + params['max_count'] + '&brand=' + params['brand'] +
+                        '&group_by=' + params['group_by'] + '&search=' + params['search'];
+                    document.getElementById('discount_a').className = 'text-warning';
+                }
+                else {
+                    document.getElementById('discount_a').href = url +
+                        '?category='+ params['category'] + '&min_price=' + params['min_price'] + '&max_price=' +
+                        params['max_price'] + '&discount=' + 'True' + '&min_count=' +
+                        params['min_count'] + '&max_count=' + params['max_count'] + '&brand=' + params['brand'] +
+                        '&group_by=' + params['group_by'] + '&search=' + params['search'];
+                    document.getElementById('discount_a').className = 'text-dark';
+                }
+
+
+
+
+
+
+
+            </script>
+        </div>
+        <div class="col-md-2">
+            <div class="dropdown">
+                <a class="dropdown-toggle" type="button" id="dropdownMenuButtonCount"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Колличество
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonCount">
+                    <form action="/" method="get">
+                        <input type="hidden" name="category" value="" id="ch_category">
+                        <input type="hidden" name="min_price" value="" id="ch_min_price">
+                        <input type="hidden" name="max_price" value="" id="ch_max_price">
+                        <input type="hidden" name="discount" value="" id="ch_discount">
+                        <input type="hidden" name="brand" value="" id="ch_brand">
+                        <input type="hidden" name="group_by" value="" id="ch_group_by">
+                        <input type="hidden" name="search" value="" id="ch_search">
+
+                        <input type="number" placeholder="Минимальное" class="form-control" name="min_count">
+                        <input type="number" class="form-control" placeholder="Максимальное" name="max_count">
+                        <input type="submit" class="btn btn-info btn-sm btn-block" value="OK">
+                    </form>
+                    <script>
+                        document.getElementById('ch_category').value = params['category'];
+                        document.getElementById('ch_min_price').value = params['min_price'];
+                        document.getElementById('ch_max_price').value = params['max_price'];
+                        document.getElementById('ch_discount').value = params['discount'];
+                        document.getElementById('ch_brand').value = params['brand'];
+                        document.getElementById('ch_group_by').value = params['group_by'];
+                        document.getElementById('ch_search').value = params['search'];
+
+
+
+
+
+                    </script>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="dropdown">
+                <a class="dropdown-toggle" type="button" id="dropdownMenuButtonBrand"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Брэнд
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonBrand">
+                    {% for brand in brands %}
+                    <a class="dropdown-item" href="" id="brand_{{brand.id}}">
+                        {{brand.name}}
+                    </a>
+                    <script>
+                        document.getElementById('brand_{{brand.id}}').href =
+                            url + '?category=' + params['category'] + '&min_price=' + params['min_price'] + '&max_price=' +
+                            params['max_price'] + '&discount=' + params['discount'] + '&min_count=' +
+                            params['min_count'] + '&max_count=' + params['max_count'] + '&brand={{brand.id}}'+
+                            '&group_by=' + params['group_by'] + '&search=' + params['search'];
+
+
+
+
+
+                    </script>
+                    {% endfor %}
+                    <script>
+                        brand_id = '{{brand_id}}';
+                        document.getElementById('brand_' + brand_id).style = 'color: blue';
+
+
+
+
+
+                    </script>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="dropdown">
+                <a class="dropdown-toggle" type="button" id="dropdownMenuButtonGroup"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Группировать
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonGroup">
+                    <a class="dropdown-item" href="" id="group_0">
+                        Минимальная цена
+                    </a>
+                    <a class="dropdown-item" href="" id="group_1">
+                        Максимальная цена
+                    </a>
+                    <a class="dropdown-item" href="" id="group_2">
+                        Минимальное кол-во
+                    </a>
+                    <a class="dropdown-item" href="" id="group_3">
+                        Максимальное кол-во
+                    </a>
+                    <a class="dropdown-item" href="" id="group_-1">
+                        Сначала новые
+                    </a>
+                    <a class="dropdown-item" href="" id="group_5">
+                        Сначала старые
+                    </a>
+                    <script>
+                        main_for_group_url = url + '?category=' + params['category'] + '&min_price=' + params['min_price'] + '&max_price=' +
+                            params['max_price'] + '&discount=' + params['discount'] + '&min_count=' +
+                            params['min_count'] + '&max_count=' + params['max_count'] + '&brand={{brand.id}}'+
+                            '&search=' + params['search'] + '&group_by=';
+                        document.getElementById('group_0').href = main_for_group_url + '0';
+                        document.getElementById('group_1').href = main_for_group_url + '1';
+                        document.getElementById('group_2').href = main_for_group_url + '2';
+                        document.getElementById('group_3').href = main_for_group_url + '3';
+                        document.getElementById('group_-1').href = main_for_group_url + '-1';
+                        document.getElementById('group_5').href = main_for_group_url + '5';
+                        document.getElementById('group_{{group_id}}').style = 'color: blue';
+                    </script>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <a href='/' class="btn btn-secondary btn-sm">
+                Очистить
+            </a>
+        </div>
+        <div class="col-md-1">
+            {% if user.is_staff %}
+            <a href="/add/" class="btn btn-primary btn-sm">
+                Добавить
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-1" style="border-left: solid lightgrey 13px">
+        {% if products %}
+        <div class="row" align="center">
+        {% for product in products %}
+        <div class="card ml-1 mr-1" style="width: 18rem;">
+            <img src="{% static 'products/' %}{{product.imgpath}}.png" class="card-img-top" alt="">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a class="text-info" style="font-weight: 700; font-size: 25px" href="/product/{{product.id}}">{{product.name}}</a></h5>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        {% if product.discount != -1 %}
+                        <span style="font-size: 25px; color: grey; font-weight: 700">{{product.discount}}&nbspр</span>
+                        <br>
+                        <span style="font-size: 19px; color: orange; font-weight: 600; text-decoration: line-through;">
+                            {{product.price}}&nbspр</span>
+                        {% else %}
+                        <span style="font-size: 25px; color: grey; font-weight: 700">{{product.price}}&nbspр</span>
+                        {% endif %}
+                        <br>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/add/in/?in=cart&id={{product.id}}"><img src="{% static 'cart.png' %}" height="40px"></a>
+                        <a href="/add/in/?in=star&id={{product.id}}"><img src="{% static 'star.png' %}" width="40px"></a>
+                    </div>
+                </div>
+                <hr>
+                {% if product.count > 0 %}
+                <div class="row">
+                    <div class="col-md-2">
+                        <span style="display: block;
+                                      background: green;
+                                      border-radius: 100%;
+                                      height: 20px;
+                                      width: 20px;
+                                      margin: 0;">
+                        </span>
+                    </div>
+                    <div class="col-md-10">
+                        В наличии {{product.count}}шт
+                    </div>
+                </div>
+                {% else %}
+                <div class="row">
+                    <div class="col-md-2">
+                        <span style="display: block;
+                                      background: red;
+                                      border-radius: 100%;
+                                      height: 20px;
+                                      width: 20px;
+                                      margin: 0;">
+                        </span>
+                    </div>
+                    <div class="col-md-10">
+                        Нет в наличии
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        </div>
+        {% else %}
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1 class="display-4">Товаров не найдено :(</h1>
+                <p class="lead">Товаров, удовлетворяющих соответствующим фильтрам не найдено. Попробуйте по-другому.</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+
+</div>
+{% endblock %}

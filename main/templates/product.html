@@ -1,0 +1,154 @@
+{% include 'wrapper.html' %}
+{% load static %}
+{% block content %}
+<br><br><br>
+<div class="container" style="border: solid lightgrey 1px">
+    <h5 class="mt-2">Главная / {{product.category.name}} /</h5>
+    <hr>
+    <div class="row">
+        <div class="col-md-4">
+            <img src="{% static 'products/' %}{{product.imgpath}}.png" style="width: 300px; height: auto">
+        </div>
+        <div class="col-md-4">
+            <div class="row">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a class="text-info" style="font-weight: 700; font-size: 25px" href="/product/{{product.id}}">{{product.name}}</a>
+                    </h5>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            {% if product.discount != -1 %}
+                            <span style="font-size: 25px; color: grey; font-weight: 700">{{product.discount}}&nbspр</span>
+                            <br>
+                            <span style="font-size: 19px; color: orange; font-weight: 600; text-decoration: line-through;">
+                            {{product.price}}&nbspр</span>
+                            {% else %}
+                            <span style="font-size: 25px; color: grey; font-weight: 700">{{product.price}}&nbspр</span>
+                            {% endif %}
+                            <br>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="/add/in/?in=cart&id={{product.id}}"><img src="{% static 'cart.png' %}"
+                                                                              height="40px"></a>
+                            <a href="/add/in/?in=star&id={{product.id}}"><img src="{% static 'star.png' %}"
+                                                                              width="40px"></a>
+                        </div>
+                    </div>
+                    <hr>
+                    {% if product.count > 0 %}
+                    <div class="row">
+                        <div class="col-md-2">
+                        <span style="display: block;
+                                      background: green;
+                                      border-radius: 100%;
+                                      height: 20px;
+                                      width: 20px;
+                                      margin: 0;">
+                        </span>
+                        </div>
+                        <div class="col-md-10">
+                            В наличии {{product.count}}шт
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="row">
+                        <div class="col-md-2">
+                        <span style="display: block;
+                                      background: red;
+                                      border-radius: 100%;
+                                      height: 20px;
+                                      width: 20px;
+                                      margin: 0;">
+                        </span>
+                        </div>
+                        <div class="col-md-10">
+                            Нет в наличии
+                        </div>
+                    </div>
+                    {% endif %}
+                    <i>Производитель: <span class="text-info" style="font-size: 25px; font-weight: 800">{{product.brand}}</span></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if user.is_staff %}
+    <div align="right">
+        <a href="/product/delete?id={{product.id}}" class="btn btn-danger" style="width: 150px">Удалить</a>
+        <a href="/product/edit?id={{product.id}}" class="btn btn-warning" style="width: 150px">Редактировать</a>
+    </div>
+    {% endif %}
+    <hr>
+    <p>{{product.description}}</p>
+    <hr>
+    <h2 align="center"><b>Вместе с этим товаром покупают:</b></h2>
+    <hr>
+    <div class="row">
+        {% for recommend in recommendations %}
+        {% if recommend.id != product.id %}
+        <div class="card ml-1 mr-1" style="width: 18rem;">
+            <img src="{% static 'products/' %}{{recommend.imgpath}}.png" class="card-img-top" alt="">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a class="text-info" style="font-weight: 700; font-size: 25px" href="/recommend/{{recommend.id}}">{{recommend.name}}</a>
+                </h5>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        {% if recommend.discount != -1 %}
+                        <span style="font-size: 25px; color: grey; font-weight: 700">{{recommend.discount}}&nbspр</span>
+                        <br>
+                        <span style="font-size: 19px; color: orange; font-weight: 600; text-decoration: line-through;">
+                            {{recommend.price}}&nbspр</span>
+                        {% else %}
+                        <span style="font-size: 25px; color: grey; font-weight: 700">{{recommend.price}}&nbspр</span>
+                        {% endif %}
+                        <br>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/add/in/?in=cart&id={{recommend.id}}"><img src="{% static 'cart.png' %}" height="40px"></a>
+                        <a href="/add/in/?in=star&id={{recommend.id}}"><img src="{% static 'star.png' %}" width="40px"></a>
+                    </div>
+                </div>
+                <hr>
+                {% if recommend.count > 0 %}
+                <div class="row">
+                    <div class="col-md-2">
+                        <span style="display: block;
+                                      background: green;
+                                      border-radius: 100%;
+                                      height: 20px;
+                                      width: 20px;
+                                      margin: 0;">
+                        </span>
+                    </div>
+                    <div class="col-md-10">
+                        В наличии {{recommend.count}}шт
+                    </div>
+                </div>
+                {% else %}
+                <div class="row">
+                    <div class="col-md-2">
+                        <span style="display: block;
+                                      background: red;
+                                      border-radius: 100%;
+                                      height: 20px;
+                                      width: 20px;
+                                      margin: 0;">
+                        </span>
+                    </div>
+                    <div class="col-md-10">
+                        Нет в наличии
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <hr>
+    <br>
+</div>
+
+{% endblock %}

@@ -1,0 +1,128 @@
+{% include 'wrapper.html' %}
+{% load static %}
+{% block content %}
+
+<br><br><br>
+<div class="container">
+    <h2 align="center">Добавление товаров и разделов</h2>
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Создать новую категорию</h5>
+            <hr>
+            <form action="/add/category/" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_name_category">{{category_add_form.name_category.label}}</label>
+                    {{category_add_form.name_category}}
+                    <script>
+                        document.getElementById('id_name_category').className = 'form-control';
+
+
+                    </script>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Создать</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <h5>Создать новый брэнд</h5>
+            <hr>
+            <form action="/add/brand/" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_name_brand">{{brand_add_form.name_brand.label}}</label>
+                    {{brand_add_form.name_brand}}
+                    <script>
+                        document.getElementById('id_name_brand').className = 'form-control';
+                    </script>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Создать</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <hr>
+    <h4 align="center">Добавить новый товар</h4>
+    <form action="/add/product/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_category">{{product_add_form.category.label}}:</label>
+            {{product_add_form.category}}
+            <script>
+                document.getElementById('id_category').className = 'form-control';
+
+            </script>
+        </div>
+        <div class="form-group">
+            <label for="id_brand">{{product_add_form.brand.label}}:</label>
+            {{product_add_form.brand}}
+            <script>
+                document.getElementById('id_brand').className = 'form-control';
+
+            </script>
+        </div>
+        <div class="form-group">
+            <label for="id_name">{{product_add_form.name.label}}:</label>
+            {{product_add_form.name}}
+            <script>
+                document.getElementById('id_name').className = 'form-control';
+
+            </script>
+        </div>
+        <div class="form-group">
+            <label for="id_description">{{product_add_form.description.label}}:</label>
+            {{product_add_form.description}}
+            <script>
+                document.getElementById('id_description').className = 'form-control';
+
+            </script>
+        </div>
+        <div class="form-group">
+            <label for="id_price">{{product_add_form.price.label}}:</label>
+            {{product_add_form.price}}
+            <script>
+                document.getElementById('id_price').className = 'form-control';
+
+            </script>
+        </div>
+        <div class="form-group">
+            <label for="id_count">{{product_add_form.count.label}}:</label>
+            {{product_add_form.count}}
+            <script>
+                document.getElementById('id_count').className = 'form-control';
+
+            </script>
+        </div>
+        <div class="form-group">
+            <label for="id_discount">{{product_add_form.discount.label}} (в рублях, -1, если скидки нет):</label>
+            {{product_add_form.discount}}
+            <script>
+                document.getElementById('id_discount').className = 'form-control';
+
+            </script>
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+            </div>
+            <div class="custom-file">
+                {{product_add_form.photo}}
+                <label class="custom-file-label" for="id_photo">{{product_add_form.photo.label}}</label>
+            </div>
+            <script>
+                element = document.getElementById('id_photo');
+                element.className = 'custom-file-input';
+                element.setAttribute('aria-describedby', "inputGroupFileAddon01");
+            </script>
+        </div>
+        <div class="form-group" align="center">
+            <button type="submit" class="btn btn-info" style="width: 250px;">Добавить</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

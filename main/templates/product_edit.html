@@ -1,0 +1,99 @@
+{% include 'wrapper.html' %}
+{% load static %}
+{% block content %}
+
+<br><br><br>
+<div class="container">
+    <h2 align="center">Редактировать товар №{{id}}</h2>
+    <hr>
+    <form action="/product/edit/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{edit_form.id}}
+        <script>
+            document.getElementById('id_id').value = {{id}};
+        </script>
+        <div class="form-group">
+            <label for="id_category">{{edit_form.category.label}}:</label>
+            {{edit_form.category}}
+            <script>
+                document.getElementById('id_category').className = 'form-control';
+
+
+            </script>
+        </div>
+        <div class="form-group">
+            <label for="id_brand">{{edit_form.brand.label}}:</label>
+            {{edit_form.brand}}
+            <script>
+                document.getElementById('id_brand').className = 'form-control';
+
+
+            </script>
+        </div>
+        <div class="form-group">
+            <label for="id_name">{{edit_form.name.label}}:</label>
+            {{edit_form.name}}
+            <script>
+                document.getElementById('id_name').className = 'form-control';
+
+
+            </script>
+        </div>
+        <div class="form-group">
+            <label for="id_description">{{edit_form.description.label}}:</label>
+            {{edit_form.description}}
+            <script>
+                document.getElementById('id_description').className = 'form-control';
+
+
+            </script>
+        </div>
+        <div class="form-group">
+            <label for="id_price">{{edit_form.price.label}}:</label>
+            {{edit_form.price}}
+            <script>
+                document.getElementById('id_price').className = 'form-control';
+
+
+            </script>
+        </div>
+        <div class="form-group">
+            <label for="id_count">{{edit_form.count.label}}:</label>
+            {{edit_form.count}}
+            <script>
+                document.getElementById('id_count').className = 'form-control';
+
+
+            </script>
+        </div>
+        <div class="form-group">
+            <label for="id_discount">{{edit_form.discount.label}} (в рублях, -1, если скидки нет):</label>
+            {{edit_form.discount}}
+            <script>
+                document.getElementById('id_discount').className = 'form-control';
+
+
+            </script>
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+            </div>
+            <div class="custom-file">
+                {{edit_form.photo}}
+                <label class="custom-file-label" for="id_photo">{{edit_form.photo.label}}</label>
+            </div>
+            <script>
+                element = document.getElementById('id_photo');
+                element.className = 'custom-file-input';
+                element.setAttribute('aria-describedby', "inputGroupFileAddon01");
+
+            </script>
+        </div>
+        <div class="form-group" align="center">
+            <button type="submit" class="btn btn-info" style="width: 250px;">Применить</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

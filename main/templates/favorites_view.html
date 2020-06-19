@@ -1,0 +1,92 @@
+{% include 'wrapper.html' %}
+{% load static %}
+{% block content %}
+
+<br><br><br>
+<div class="container" style="border: solid lightgrey 1px">
+    <h3>Ваше избранное</h3>
+    <hr>
+    {% if favorites %}
+    <div>
+        <div>
+            {% for favorite in favorites %}
+            {% with favorite.product as product %}
+            <div class="media">
+                <img src="{% static 'products' %}/{{product.imgpath}}.png/" class="mr-3" alt="..."
+                     style="width: 100px; height:100px">
+                <div class="media-body">
+                    <div>
+                        <div class="row">
+                            <div class="col-md-7">
+                                <a href="/product/{{product.id}}" class="text-info" style="font-size: 30px; font-weight: 700">{{product.name}}</a>
+                            </div>
+                            <div class="col-md-3">
+                                {% if product.discount != -1 %}
+                                <span style="font-size: 25px; color: grey; font-weight: 700">{{product.discount}}&nbspр</span>
+                                <br>
+                                <span style="font-size: 19px; color: orange; font-weight: 600; text-decoration: line-through;">
+                            {{product.price}}&nbspр</span>
+                                {% else %}
+                                <span style="font-size: 25px; color: grey; font-weight: 700">{{product.price}}&nbspр</span>
+                                {% endif %}
+                                <br>
+                                <hr>
+                                {% if product.count > 0 %}
+                                <div class="row">
+                                    <div class="col-md-2">
+                        <span style="display: block;
+                                      background: green;
+                                      border-radius: 100%;
+                                      height: 20px;
+                                      width: 20px;
+                                      margin: 0;">
+                        </span>
+                                    </div>
+                                    <div class="col-md-10">
+                                        В наличии {{product.count}}шт
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="row">
+                                    <div class="col-md-2">
+                        <span style="display: block;
+                                      background: red;
+                                      border-radius: 100%;
+                                      height: 20px;
+                                      width: 20px;
+                                      margin: 0;">
+                        </span>
+                                    </div>
+                                    <div class="col-md-10">
+                                        Нет в наличии
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-2">
+                                <br><br>
+                                <a class="btn btn-danger" href="/myfavorites/delete/?id={{favorite.id}}">
+                                    Удалить
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            {% endwith %}
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">У вас нет избранных товаров :(</h1>
+            <p class="lead">Вы можете найти множество интересных товаров в нашем <a href="/">каталоге</a>!</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+
+{% endblock %}

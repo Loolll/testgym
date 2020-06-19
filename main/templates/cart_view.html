@@ -1,0 +1,247 @@
+{% include 'wrapper.html' %}
+{% load static %}
+{% block content %}
+
+<br><br><br>
+<div class="container" style="border: solid lightgrey 1px">
+    <h3>Ваша корзина</h3>
+    <hr>
+    {% if carts %}
+    <div class="row">
+        <div class="col-md-10" style="border-right: solid lightgrey 1px">
+            {% for cart in carts %}
+            {% with cart.product as product %}
+            <div class="media">
+                <img src="{% static 'products' %}/{{cart.product.imgpath}}.png/" class="mr-3" alt="..."
+                     style="width: 100px; height:100px">
+                <div class="media-body">
+                    <div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <a href="/product/{{product.id}}" class="text-info" style="font-size: 30px; font-weight: 700">{{product.name}}</a>
+                            </div>
+                            <div class="col-md-2">
+                                Колличество:
+                                <input class='form-control' onchange="change_count({{cart.id}})"
+                                       id='count_{{cart.id}}' type="number" value="{{cart.count}}">
+                            </div>
+                            <div class="col-md-3">
+                                {% if product.discount != -1 %}
+                                <span style="font-size: 25px; color: grey; font-weight: 700">{{product.discount}}&nbspр</span>
+                                <br>
+                                <span style="font-size: 19px; color: orange; font-weight: 600; text-decoration: line-through;">
+                            {{product.price}}&nbspр</span>
+                                {% else %}
+                                <span style="font-size: 25px; color: grey; font-weight: 700">{{product.price}}&nbspр</span>
+                                {% endif %}
+                                <br>
+                                <hr>
+                                {% if product.count > 0 %}
+                                <div class="row">
+                                    <div class="col-md-2">
+                        <span style="display: block;
+                                      background: green;
+                                      border-radius: 100%;
+                                      height: 20px;
+                                      width: 20px;
+                                      margin: 0;">
+                        </span>
+                                    </div>
+                                    <div class="col-md-10">
+                                        В наличии {{product.count}}шт
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="row">
+                                    <div class="col-md-2">
+                        <span style="display: block;
+                                      background: red;
+                                      border-radius: 100%;
+                                      height: 20px;
+                                      width: 20px;
+                                      margin: 0;">
+                        </span>
+                                    </div>
+                                    <div class="col-md-10">
+                                        Нет в наличии
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-2">
+                                <br><br>
+                                <a class="btn btn-danger" href="/mycart/change_count/?id={{cart.id}}&count=0">
+                                    Удалить
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            {% endwith %}
+            {% endfor %}
+            <script>
+                function change_count(id){
+                    document.location.replace(
+                    '/mycart/change_count/?id='+id+'&count='+document.getElementById('count_'+id).value);
+                }
+
+
+
+
+
+            </script>
+        </div>
+        <div class="col-md-2">
+            <h3>Всего:</h3>
+            <hr>
+            {% if total_with_discount != total_without_discount %}
+            <span style="font-size: 25px; color: grey; font-weight: 700">{{total_with_discount}}&nbspр</span>
+            <br>
+            <span style="font-size: 19px; color: orange; font-weight: 600; text-decoration: line-through;">
+                            {{total_without_discount}}&nbspр</span>
+            {% else %}
+            <span style="font-size: 25px; color: grey; font-weight: 700">{{total_without_discount}}&nbspр</span>
+            {% endif %}
+            <hr>
+            <button type="button" class="btn btn-info mb-3" data-toggle="modal" data-target="#payModal">
+                Оформить заказ
+            </button>
+
+            <div class="modal fade" id="payModal" tabindex="-1" role="dialog" aria-labelledby="payModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="payModalLabel">
+                                <i> Оплата заказа <b style="font-weight: 800; color: purple">{{total_with_discount}}&nbspр</b></i>
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        {% if not user.is_authenticated %}
+                        <form method="post" action="/mycart/pay/">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <h4>Данные о пользователе</h4>
+                                <hr>
+                                <div class="form-group">
+                                    <label for="id_email">{{pay_form.email.label}}</label>
+                                    {{pay_form.email}}
+                                    <script>
+                    document.getElementById('id_email').className = 'form-control';
+                                    </script>
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_soname">{{pay_form.soname.label}}</label>
+                                    {{pay_form.soname}}
+                                    <script>
+                    document.getElementById('id_soname').className = 'form-control';
+                                    </script>
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_name">{{pay_form.name.label}}</label>
+                                    {{pay_form.name}}
+                                    <script>
+                    document.getElementById('id_name').className = 'form-control';
+                                    </script>
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_phone">{{pay_form.phone.label}}</label>
+                                    {{pay_form.phone}}
+                                    <script>
+                    document.getElementById('id_phone').className = 'form-control';
+                                    </script>
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_password">{{pay_form.password.label}}</label>
+                                    {{pay_form.password}}
+                                    <script>
+                    document.getElementById('id_password').className = 'form-control';
+                                    </script>
+                                </div>
+                                <div class="form-group form-check">
+                                    {{pay_form.entity}}
+                                    <label class="form-check-label" for="id_entity">{{pay_form.entity.label}}</label>
+                                    <script>
+                    document.getElementById('id_entity').className = 'form-check-input';
+                                    </script>
+                                </div><hr>
+                                <h4>Платежные данные:</h4>
+                                <hr>
+                                <div class="form-group">
+                                    <label for="id_cc_number">{{pay_form.cc_number.label}}:</label>
+                                    {{pay_form.cc_number}}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_cc_expiry">{{pay_form.cc_expiry.label}}:</label>
+                                    {{pay_form.cc_expiry}}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_cc_code">{{pay_form.cc_code.label}}:</label>
+                                    {{pay_form.cc_code}}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Отмена
+                                </button>
+                                <button type="submit" class="btn btn-outline-success">
+                                    <span style="font-size:20px; font-weight:700">₽</span>&nbspОплатить
+                                </button>
+                            </div>
+                        </form>
+                        {% else %}
+                        <form method="post" action="/mycart/pay/">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <h4>Платежные данные:</h4>
+                                <hr>
+                                <div class="form-group">
+                                    <label for="id_cc_number">{{pay_form.cc_number.label}}:</label>
+                                    {{pay_form.cc_number}}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_cc_expiry">{{pay_form.cc_expiry.label}}:</label>
+                                    {{pay_form.cc_expiry}}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_cc_code">{{pay_form.cc_code.label}}:</label>
+                                    {{pay_form.cc_code}}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Отмена
+                                </button>
+                                <button type="submit" class="btn btn-outline-success">
+                                    <span style="font-size:20px; font-weight:700">₽</span>&nbspОплатить
+                                </button>
+                            </div>
+                        </form>
+                        {% endif %}
+                        <script>
+                            document.getElementById('id_cc_number').className = 'form-control';
+                            document.getElementById('id_cc_number').placeholder = '0000 0000 0000 0000';
+                            document.getElementById('id_cc_code').className = 'form-control';
+                            document.getElementById('id_cc_code').placeholder = '000';
+                            document.getElementById('id_cc_expiry').className = 'form-control';
+                            document.getElementById('id_cc_expiry').placeholder = '00/00';
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">Ваша корзина пуста :(</h1>
+            <p class="lead">Вы можете найти множество интересных товаров в нашем <a href="/">каталоге</a>!</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+
+{% endblock %}
