@@ -12,7 +12,7 @@
             {% for favorite in favorites %}
             {% with favorite.product as product %}
             <div class="media">
-                <img src="{% static 'products' %}/{{product.imgpath}}.png/" class="mr-3" alt="..."
+                <img src="{% static 'products' %}/{{product.imgpath}}.png" class="mr-3" alt="..."
                      style="width: 100px; height:100px">
                 <div class="media-body">
                     <div>
