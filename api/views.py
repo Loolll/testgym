@@ -1,9 +1,6 @@
-from django.shortcuts import render
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import BasicAuthentication
 from django.http import JsonResponse
-from django.contrib.auth import authenticate, logout, login
-from rest_framework.permissions import IsAuthenticated
 from .auth import CsrfExemptSessionAuthentication, api_user_authentication
 from users.models import CustomUser
 from main.models import Brand, Category, Product, Carts, Favorites
@@ -141,9 +138,9 @@ def product_create_form_valid(data):
     return True
 
 
-@api_view(['POST'])
+@api_view(['POST', 'PUT'])
 @authentication_classes([CsrfExemptSessionAuthentication, BasicAuthentication])
-def user_create(request):
+def users_view(request):
     if request.method == 'POST':
         status = user_creation_form_valid(request.POST)
         if type(status) is bool:
@@ -158,12 +155,7 @@ def user_create(request):
             user.set_password(password)
             user.save()
         return JsonResponse({'Status': 'Created' if type(status) is bool else status})
-
-
-@api_view(['PUT'])
-@authentication_classes([CsrfExemptSessionAuthentication])
-def user_edit(request):
-    if request.method == 'PUT':
+    elif request.method == 'PUT':
         user = api_user_authentication(request)
         if user is not None:
             status = user_edit_form_valid(request.POST)
@@ -184,30 +176,9 @@ def user_edit(request):
         return JsonResponse({'Status': 'Edited' if type(status) is bool else status})
 
 
-@api_view(['POST'])
+@api_view(['POST', 'PUT', 'DELETE', 'GET'])
 @authentication_classes([CsrfExemptSessionAuthentication])
-def brand_add(request):
-    if request.method == 'POST':
-        user = api_user_authentication(request)
-        if user is not None:
-            if user.is_staff:
-                try:
-                    name = request.POST['name']
-                    Brand.objects.create(name=name)
-                    status = True
-                except:
-                    status = 'Укажите имя для бренда'
-            else:
-                status = 'Недостаточно прав'
-        else:
-            status = 'Аутентификационные данные неверны'
-
-        return JsonResponse({'Status': 'Created' if type(status) is bool else status})
-
-
-@api_view(['POST'])
-@authentication_classes([CsrfExemptSessionAuthentication])
-def category_add(request):
+def categories_view(request):
     if request.method == 'POST':
         user = api_user_authentication(request)
         if user is not None:
@@ -224,12 +195,7 @@ def category_add(request):
             status = 'Аутентификационные данные неверны'
 
         return JsonResponse({'Status': 'Created' if type(status) is bool else status})
-
-
-@api_view(['PUT'])
-@authentication_classes([CsrfExemptSessionAuthentication])
-def category_edit(request):
-    if request.method == 'PUT':
+    elif request.method == 'PUT':
         user = api_user_authentication(request)
         if user is not None:
             if user.is_staff:
@@ -251,11 +217,31 @@ def category_edit(request):
             status = 'Аутентификационные данные неверны'
 
         return JsonResponse({'Status': 'Renamed' if type(status) is bool else status})
+    elif request.method == 'DELETE':
+        user = api_user_authentication(request)
+        if user is not None:
+            if user.is_staff:
+                try:
+                    category_id = request.POST['id']
+                    Category.objects.get(id=category_id).delete()
+                    status = True
+                except:
+                    status = 'Укажите существующий id для категории'
+            else:
+                status = 'Недостаточно прав'
+        else:
+            status = 'Аутентификационные данные неверны'
+
+        return JsonResponse({'Status': 'Deleted' if type(status) is bool else status})
+    elif request.method == 'GET':
+        categories = Category.objects.all()
+        result = dict([category.id, category.name] for category in categories)
+        return JsonResponse(result)
 
 
-@api_view(['PUT'])
+@api_view(['PUT', 'POST', 'GET', 'DELETE'])
 @authentication_classes([CsrfExemptSessionAuthentication])
-def brand_edit(request):
+def brands_view(request):
     if request.method == 'PUT':
         user = api_user_authentication(request)
         if user is not None:
@@ -278,33 +264,23 @@ def brand_edit(request):
             status = 'Аутентификационные данные неверны'
 
         return JsonResponse({'Status': 'Renamed' if type(status) is bool else status})
-
-
-@api_view(['DELETE'])
-@authentication_classes([CsrfExemptSessionAuthentication])
-def category_delete(request):
-    if request.method == 'DELETE':
+    elif request.method == 'POST':
         user = api_user_authentication(request)
         if user is not None:
             if user.is_staff:
                 try:
-                    category_id = request.POST['id']
-                    Category.objects.get(id=category_id).delete()
+                    name = request.POST['name']
+                    Brand.objects.create(name=name)
                     status = True
                 except:
-                    status = 'Укажите существующий id для категории'
+                    status = 'Укажите имя для бренда'
             else:
                 status = 'Недостаточно прав'
         else:
             status = 'Аутентификационные данные неверны'
 
-        return JsonResponse({'Status': 'Deleted' if type(status) is bool else status})
-
-
-@api_view(['DELETE'])
-@authentication_classes([CsrfExemptSessionAuthentication])
-def brand_delete(request):
-    if request.method == 'DELETE':
+        return JsonResponse({'Status': 'Created' if type(status) is bool else status})
+    elif request.method == 'DELETE':
         user = api_user_authentication(request)
         if user is not None:
             if user.is_staff:
@@ -320,29 +296,15 @@ def brand_delete(request):
             status = 'Аутентификационные данные неверны'
 
         return JsonResponse({'Status': 'Deleted' if type(status) is bool else status})
-
-
-@api_view(['GET'])
-@authentication_classes([CsrfExemptSessionAuthentication])
-def categories_get(request):
-    if request.method == 'GET':
-        categories = Category.objects.all()
-        result = dict([category.id, category.name] for category in categories)
-        return JsonResponse(result)
-
-
-@api_view(['GET'])
-@authentication_classes([CsrfExemptSessionAuthentication])
-def brands_get(request):
-    if request.method == 'GET':
+    elif request.method == 'GET':
         brands = Brand.objects.all()
         result = dict([brand.id, brand.name] for brand in brands)
         return JsonResponse(result)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
 @authentication_classes([CsrfExemptSessionAuthentication])
-def products_get(request):
+def products_view(request):
     if request.method == 'GET':
         products = Product.objects.all()
         result = dict([product.id, {'Name': product.name, 'Description': product.description,
@@ -353,12 +315,7 @@ def products_get(request):
                                     'ImagePath': settings.MEDIA_ROOT+ '\\'+ product.imgpath + '.png',
                                     'Discount': product.discount}]for product in products)
         return JsonResponse(result)
-
-
-@api_view(['DELETE'])
-@authentication_classes([CsrfExemptSessionAuthentication])
-def product_delete(request):
-    if request.method == 'DELETE':
+    elif request.method == 'DELETE':
         user = api_user_authentication(request)
         if user is not None:
             if user.is_staff:
@@ -374,12 +331,7 @@ def product_delete(request):
             status = 'Аутентификационные данные неверны'
 
         return JsonResponse({'Status': 'Deleted' if type(status) is bool else status})
-
-
-@api_view(['PUT'])
-@authentication_classes([CsrfExemptSessionAuthentication])
-def product_edit(request):
-    if request.method == 'PUT':
+    elif request.method == 'PUT':
         user = api_user_authentication(request)
         if user is not None:
             if user.is_staff:
@@ -416,12 +368,7 @@ def product_edit(request):
             status = 'Аутентификационные данные неверны'
 
         return JsonResponse({'Status': 'Edited' if type(status) is bool else status})
-
-
-@api_view(['POST'])
-@authentication_classes([CsrfExemptSessionAuthentication])
-def product_create(request):
-    if request.method == 'POST':
+    elif request.method == 'POST':
         user = api_user_authentication(request)
         if user is not None:
             if user.is_staff:
@@ -458,59 +405,51 @@ def product_create(request):
         return JsonResponse({'Status': 'Created' if type(status) is bool else status})
 
 
-@api_view(['GET'])
+@api_view(['GET', 'PUT', 'POST'])
 @authentication_classes([CsrfExemptSessionAuthentication])
-def cart_view(request):
-    user = api_user_authentication(request)
-    carts: list
-    if user is not None:
-        carts = Carts.objects.filter(user=user)
-    else:
-        carts = Carts.objects.filter(ip=get_client_ip(request))
-    result = dict([cart.id, {'Product': cart.product.name, "ProductID": cart.product.id,
-                             'Count': cart.count}] for cart in carts)
-    return JsonResponse(result)
-
-
-@api_view(['POST'])
-@authentication_classes([CsrfExemptSessionAuthentication])
-def cart_change(request):
-    user = api_user_authentication(request)
-    try:
-        count = int(request.POST['count'])
+def carts_view(request):
+    if request.method == 'GET':
+        user = api_user_authentication(request)
+        carts: list
+        if user is not None:
+            carts = Carts.objects.filter(user=user)
+        else:
+            carts = Carts.objects.filter(ip=get_client_ip(request))
+        result = dict([cart.id, {'Product': cart.product.name, "ProductID": cart.product.id,
+                                 'Count': cart.count}] for cart in carts)
+        return JsonResponse(result)
+    elif request.method == 'PUT':
+        user = api_user_authentication(request)
         try:
-            cart = Carts.objects.get(id=request.POST['id'])
-            if user is not None:
-                if cart.user == user:
-                    if count != 0:
-                        cart.count = count
-                        cart.save()
-                        status = 'Changed'
+            count = int(request.POST['count'])
+            try:
+                cart = Carts.objects.get(id=request.POST['id'])
+                if user is not None:
+                    if cart.user == user:
+                        if count != 0:
+                            cart.count = count
+                            cart.save()
+                            status = 'Changed'
+                        else:
+                            cart.delete()
+                            status = 'Deleted'
                     else:
-                        cart.delete()
-                        status = 'Deleted'
+                        status = 'Отказано в доступе'
                 else:
-                    status = 'Отказано в доступе'
-            else:
-                if cart.ip == get_client_ip(request):
-                    if count != 0:
-                        cart.count = count
-                        cart.save()
-                        status = 'Changed'
-                    else:
-                        cart.delete()
-                        status = 'Deleted'
+                    if cart.ip == get_client_ip(request):
+                        if count != 0:
+                            cart.count = count
+                            cart.save()
+                            status = 'Changed'
+                        else:
+                            cart.delete()
+                            status = 'Deleted'
+            except:
+                status = 'Введите корректный id корзины'
         except:
-            status = 'Введите корректный id корзины'
-    except:
-        status = 'Введите число'
-    return JsonResponse({'Status': status})
-
-
-@api_view(['POST'])
-@authentication_classes([CsrfExemptSessionAuthentication])
-def cart_add(request):
-    if request.method == 'POST':
+            status = 'Введите число'
+        return JsonResponse({'Status': status})
+    elif request.method == 'POST':
         try:
             product = Product.objects.get(id=request.POST['product_id'])
             user = api_user_authentication(request)
@@ -534,45 +473,37 @@ def cart_add(request):
         return JsonResponse({"status": status})
 
 
-@api_view(['GET'])
+@api_view(['GET', 'DELETE', 'POST'])
 @authentication_classes([CsrfExemptSessionAuthentication])
-def favorite_view(request):
-    user = api_user_authentication(request)
-    favorites: list
-    if user is not None:
-        favorites = Favorites.objects.filter(user=user)
-    else:
-        favorites = Favorites.objects.filter(ip=get_client_ip(request))
-    result = dict([favorite.id, {
-        'Product': favorite.product.name, "ProductID": favorite.product.id}] for favorite in favorites)
-    return JsonResponse(result)
-
-
-@api_view(['DELETE'])
-@authentication_classes([CsrfExemptSessionAuthentication])
-def favorite_delete(request):
-    user = api_user_authentication(request)
-    try:
-        favorite = Favorites.objects.get(id=request.POST['id'])
+def favorites_view(request):
+    if request.method == 'GET':
+        user = api_user_authentication(request)
+        favorites: list
         if user is not None:
-            if favorite.user == user:
-                favorite.delete()
-                status = 'Deleted'
-            else:
-                status = 'Отказано в доступе'
+            favorites = Favorites.objects.filter(user=user)
         else:
-            if favorite.ip == get_client_ip(request):
-                favorite.delete()
-                status = 'Deleted'
-    except:
-        status = 'Введите корректный id избранного'
-    return JsonResponse({'Status': status})
-
-
-@api_view(['POST'])
-@authentication_classes([CsrfExemptSessionAuthentication])
-def favorite_add(request):
-    if request.method == 'POST':
+            favorites = Favorites.objects.filter(ip=get_client_ip(request))
+        result = dict([favorite.id, {
+            'Product': favorite.product.name, "ProductID": favorite.product.id}] for favorite in favorites)
+        return JsonResponse(result)
+    elif request.method == 'DELETE':
+        user = api_user_authentication(request)
+        try:
+            favorite = Favorites.objects.get(id=request.POST['id'])
+            if user is not None:
+                if favorite.user == user:
+                    favorite.delete()
+                    status = 'Deleted'
+                else:
+                    status = 'Отказано в доступе'
+            else:
+                if favorite.ip == get_client_ip(request):
+                    favorite.delete()
+                    status = 'Deleted'
+        except:
+            status = 'Введите корректный id избранного'
+        return JsonResponse({'Status': status})
+    elif request.method == 'POST':
         try:
             product = Product.objects.get(id=request.POST['product_id'])
             user = api_user_authentication(request)

@@ -8,10 +8,11 @@ class CategoryAddForm(forms.Form):
 
 class ProductAddForm(forms.ModelForm):
     photo = forms.FileField(label='Изображение', required=True)
+    description = forms.CharField(label='Описание', required=True, max_length=1000, widget=forms.Textarea)
 
     class Meta:
         model = Product
-        fields = ['category', 'brand', 'name', 'description', 'price', 'count', 'discount']
+        fields = ['category', 'brand', 'name', 'price', 'count', 'discount']
 
 
 class ProductEditForm(forms.ModelForm):
@@ -31,6 +32,7 @@ class PayOldUserForm(forms.Form):
     cc_number = forms.CharField(label='Номер карты', min_length=16, max_length=16)
     cc_expiry = forms.CharField(label='Срок действия', min_length=5, max_length=5)
     cc_code = forms.CharField(label='CVV/CVC', min_length=3, max_length=3)
+    cc_name = forms.CharField(label='Имя', max_length=1000)
 
 
 class PayNewUserForm(PayOldUserForm):
@@ -40,3 +42,8 @@ class PayNewUserForm(PayOldUserForm):
     soname = forms.CharField(label='Фамилия:', required=True, max_length=100)
     phone = forms.CharField(label='Телефон:', required=True, max_length=15)
     entity = forms.BooleanField(label='Я - представитель юридического лица или ИП', required=False)
+
+    cc_number = forms.CharField(label='Номер карты', min_length=16, max_length=16)
+    cc_expiry = forms.CharField(label='Срок действия', min_length=5, max_length=5)
+    cc_code = forms.CharField(label='CVV/CVC', min_length=3, max_length=3)
+    cc_name = forms.CharField(label='Имя', max_length=1000)

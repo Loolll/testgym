@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'media',
     'rest_framework',
     'api',
+    'rest_framework_swagger',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [

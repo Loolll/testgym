@@ -108,40 +108,51 @@
                     <div class="col-md-6">
                         <a href="/add/in/?in=cart&id={{recommend.id}}"><img src="{% static 'cart.png' %}" height="40px"></a>
                         <a href="/add/in/?in=star&id={{recommend.id}}"><img src="{% static 'star.png' %}" width="40px"></a>
+                        <div class="mt-2">
+                        {% if recommend.count > 0 %}
+
+                            {% if recommend.count > 3 %}
+                            {% if recommend.count > 9 %}
+                                <span style="display: block;
+                                              background: green;
+                                              border-radius: 100%;
+                                              height: 30px;
+                                              width: 30px;
+                                              margin: 0;">
+                                </span>
+                            {% else %}
+                                <span style="display: block;
+                                              background: yellow;
+                                              border-radius: 100%;
+                                              height: 30px;
+                                              width: 30px;
+                                              margin: 0;">
+                                </span>
+                            {% endif %}
+
+                            {% else %}
+                                <span style="display: block;
+                                              background: red;
+                                              border-radius: 100%;
+                                              height: 30px;
+                                              width: 30px;
+                                              margin: 0;">
+                                </span>
+                            {% endif %}
+                        {% else %}
+                            <div class="col-md-2">
+                                <span style="display: block;
+                                              background: black;
+                                              border-radius: 100%;
+                                              height: 30px;
+                                              width: 30px;
+                                              margin: 0;">
+                                </span>
+                            </div>
+                        {% endif %}
+                        </div>
                     </div>
                 </div>
-                <hr>
-                {% if recommend.count > 0 %}
-                <div class="row">
-                    <div class="col-md-2">
-                        <span style="display: block;
-                                      background: green;
-                                      border-radius: 100%;
-                                      height: 20px;
-                                      width: 20px;
-                                      margin: 0;">
-                        </span>
-                    </div>
-                    <div class="col-md-10">
-                        В наличии {{recommend.count}}шт
-                    </div>
-                </div>
-                {% else %}
-                <div class="row">
-                    <div class="col-md-2">
-                        <span style="display: block;
-                                      background: red;
-                                      border-radius: 100%;
-                                      height: 20px;
-                                      width: 20px;
-                                      margin: 0;">
-                        </span>
-                    </div>
-                    <div class="col-md-10">
-                        Нет в наличии
-                    </div>
-                </div>
-                {% endif %}
             </div>
         </div>
         {% endif %}

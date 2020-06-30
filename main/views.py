@@ -29,6 +29,8 @@ def user_creation_form_valid(data):  # Does not used include from users.views, b
 
 
 def card_validation(data):
+    if not all([x.lower() in 'abcdefghijklmnopqrstuvwxyz' for x in data['cc_name']]):
+        return 'Проверьте правильность введного имени карты и попробуйте еще раз'
     if not all([x in '0123456789' for x in data['cc_number']]):
         return 'Проверьте правильность введного номера карты и попробуйте еще раз'
     if not all([x in '0123456789' for x in data['cc_code']]):
@@ -325,9 +327,11 @@ def my_cart(request):
             if form.is_valid():
                 status = card_validation(form.cleaned_data)
                 if type(status) is bool:
+                    # Wrapper for card
                     # cc_number = form.cleaned_data['cc_number']
                     # cc_expire = form.cleaned_data['cc_expiry']
                     # cc_code = form.cleaned_data['cc_code']
+                    # cc_name = form.cleaned_data['cc_name']
 
                     carts = Carts.objects.filter(user=request.user)
                     for cart in carts:
@@ -360,6 +364,7 @@ def my_cart(request):
                         # cc_number = form.cleaned_data['cc_number']
                         # cc_expire = form.cleaned_data['cc_expiry']
                         # cc_code = form.cleaned_data['cc_code']
+                        # cc_name = form.cleaned_data['cc_name']
 
                         carts = Carts.objects.filter(ip=get_client_ip(request))
                         for cart in carts:
