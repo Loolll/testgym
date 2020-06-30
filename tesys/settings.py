@@ -24,9 +24,9 @@ SECRET_KEY = '&@+%bm06q)*b6pk4^-@84aw!q7*($+o69stwps02du16$r-ndf'
 ANONIM_PASSWORD = 'qmMezRCtBa65dM8mbgrNY5a72N3QXvXuKSY4zymR'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['45.132.18.159']
 
 
 # Application definition
@@ -43,8 +43,6 @@ INSTALLED_APPS = [
     'media',
     'rest_framework',
     'api',
-    'rest_framework_swagger',
-    'drf_yasg',
 ]
 
 MIDDLEWARE = [
