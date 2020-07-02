@@ -48,3 +48,9 @@ class Carts(models.Model):
 
     def __str__(self):
         return self.product.name
+
+
+class Rates(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='Пользователь')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
+    rate = models.IntegerField('Оценка', default=0)

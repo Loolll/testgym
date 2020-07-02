@@ -18,15 +18,60 @@
                     <hr>
                     <div class="row">
                         <div class="col-md-6">
-                            <i class="fas fa-star" style="color: orange"></i>
-                            <i class="fas fa-star" style="color: orange"></i>
-                            <i class="fas fa-star" style="color: orange"></i>
-                            <i class="fas fa-star" style="color: orange"></i>
-                            <i class="fas fa-star" style="color: orange"></i>
-                            #TODO RATE
+                            {% if rate_count > 0 %}
+                                {% if rate > 4.5 %}
+                            <a href="/product/rate?product={{product.id}}&rate=1"><i class="fas fa-star" style="color: orange"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=2"><i class="fas fa-star" style="color: orange"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=3"><i class="fas fa-star" style="color: orange"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=4"><i class="fas fa-star" style="color: orange"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=5"><i class="fas fa-star" style="color: orange"></i></a>
+                                {% else %}
+                                    {% if rate > 3.5 %}
+                            <a href="/product/rate?product={{product.id}}&rate=1"><i class="fas fa-star" style="color: orange"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=2"><i class="fas fa-star" style="color: orange"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=3"><i class="fas fa-star" style="color: orange"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=4"><i class="fas fa-star" style="color: orange"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=5"><i class="fas fa-star" style="color: grey"></i></a>
+                                    {% else %}
+                                        {% if rate > 2.5 %}
+                            <a href="/product/rate?product={{product.id}}&rate=1"><i class="fas fa-star" style="color: orange"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=2"><i class="fas fa-star" style="color: orange"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=3"><i class="fas fa-star" style="color: orange"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=4"><i class="fas fa-star" style="color: grey"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=5"><i class="fas fa-star" style="color: grey"></i></a>
+                                        {% else %}
+                                            {% if rate > 1.5 %}
+                            <a href="/product/rate?product={{product.id}}&rate=1"><i class="fas fa-star" style="color: orange"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=2"><i class="fas fa-star" style="color: orange"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=3"><i class="fas fa-star" style="color: grey"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=4"><i class="fas fa-star" style="color: grey"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=5"><i class="fas fa-star" style="color: grey"></i></a>
+                                            {% else %}
+                            <a href="/product/rate?product={{product.id}}&rate=1"><i class="fas fa-star" style="color: orange"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=2"><i class="fas fa-star" style="color: grey"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=3"><i class="fas fa-star" style="color: grey"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=4"><i class="fas fa-star" style="color: grey"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=5"><i class="fas fa-star" style="color: grey"></i></a>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            <span style="color: grey">{{rate_count}} оценок</span>
+                            {% else %}
+                            <a href="/product/rate?product={{product.id}}&rate=1"><i class="fas fa-star" style="color: grey"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=2"><i class="fas fa-star" style="color: grey"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=3"><i class="fas fa-star" style="color: grey"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=4"><i class="fas fa-star" style="color: grey"></i></a>
+                            <a href="/product/rate?product={{product.id}}&rate=5"><i class="fas fa-star" style="color: grey"></i></a>
+                            <span>Никто не оценил</span>
+                            {% endif %}
                             <br>
-                            <a href="/add/in/?in=star&id={{product.id}}" style="color: grey">
+                            <a href="/add/in/?in=star&id={{product.id}}" style="color: grey" id="in_star_link_{{product.id}}">
                                 <i class="fas fa-star" style="color: black"></i> В избранное</a>
+                            <script>
+                                document.getElementById('in_star_link_{{product.id}}').href = "/add/in/?in=star&id={{product.id}}&from=" +
+                                 document.location.href.replace('?', '~').split('&').join('№')
+                            </script>
                             <br>
                             {% if product.count > 0 %}
 
@@ -58,8 +103,11 @@
                             <span style="font-size: 25px; color: black; font-weight: 700">{{product.price}}&nbspр</span>
                             {% endif %}
                             <br>
-                            <a href="/add/in/?in=cart&id={{product.id}}" class="btn btn-danger">Добавить в корзину</a>
-
+                            <a href="/add/in/?in=cart&id={{product.id}}" class="btn btn-danger" id="in_cart_link_{{product.id}}">Добавить в корзину</a>
+                            <script>
+                                document.getElementById('in_cart_link_{{product.id}}').href = "/add/in/?in=cart&id={{product.id}}&from=" +
+                                 document.location.href.replace('?', '~').split('&').join('№')
+                            </script>
                         </div>
                     </div>
                     <hr>

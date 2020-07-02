@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Category, Brand, Product, Carts, Favorites
+from .models import Category, Brand, Product, Carts, Favorites, Rates
 from users.models import CustomUser
 from .forms import CategoryAddForm, BrandAddForm, ProductAddForm, PayNewUserForm, PayOldUserForm, ProductEditForm
 from django.http import HttpResponseRedirect as HRR
@@ -443,3 +443,24 @@ def delete_from_favorites(request):
             return HRR('/myfavorites/')
         else:
             return HRR('/args_error/')
+
+
+def rate_product(request):
+    if request.user.is_authenticated:
+        try:
+            product = Product.objects.get(id=request.GET['product'])
+        except exceptions.ObjectDoesNotExist:
+            return HRR('/')
+        try:
+            last_rate = Rates.objects.get(user=request.user)
+            if last_rate.rate == int(request.GET['rate']):
+                last_rate.delete()
+            else:
+                last_rate.rate = int(request.GET['rate'])
+                last_rate.save()
+        except exceptions.ObjectDoesNotExist:
+            Rates.objects.create(user=request.user, rate=request.GET['rate'], product=product)
+
+        return HRR(f'/product/{product.id}')
+    else:
+        return HRR('/auth/')
