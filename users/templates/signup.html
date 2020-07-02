@@ -24,7 +24,7 @@
         <form action="/users/reg/" method="POST">
             {% csrf_token %}
             <div class="form-group">
-                <label for="id_email">{{reg_form.email.label}}</label>
+                <label for="id_email">*{{reg_form.email.label}}</label>
                 {{reg_form.email}}
                 <script>
                     document.getElementById('id_email').className = 'form-control';
@@ -33,7 +33,7 @@
                 </script>
             </div>
             <div class="form-group">
-                <label for="id_soname">{{reg_form.soname.label}}</label>
+                <label for="id_soname">*{{reg_form.soname.label}}</label>
                 {{reg_form.soname}}
                 <script>
                     document.getElementById('id_soname').className = 'form-control';
@@ -42,7 +42,7 @@
                 </script>
             </div>
             <div class="form-group">
-                <label for="id_name">{{reg_form.name.label}}</label>
+                <label for="id_name">*{{reg_form.name.label}}</label>
                 {{reg_form.name}}
                 <script>
                     document.getElementById('id_name').className = 'form-control';
@@ -51,7 +51,7 @@
                 </script>
             </div>
             <div class="form-group">
-                <label for="id_phone">{{reg_form.phone.label}}</label>
+                <label for="id_phone">*{{reg_form.phone.label}}</label>
                 {{reg_form.phone}}
                 <script>
                     document.getElementById('id_phone').className = 'form-control';
@@ -60,7 +60,7 @@
                 </script>
             </div>
             <div class="form-group">
-                <label for="id_password1">{{reg_form.password1.label}}</label>
+                <label for="id_password1">*{{reg_form.password1.label}}</label>
                 {{reg_form.password1}}
                 <script>
                     document.getElementById('id_password1').className = 'form-control';
@@ -69,7 +69,7 @@
                 </script>
             </div>
             <div class="form-group">
-                <label for="id_password2">{{reg_form.password2.label}}</label>
+                <label for="id_password2">*{{reg_form.password2.label}}</label>
                 {{reg_form.password2}}
                 <div class="badge badge-danger" style='display: None' id="valid">Введенные вами пароли не совпадают
                 </div>

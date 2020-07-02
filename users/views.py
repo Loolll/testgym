@@ -1,11 +1,12 @@
 from django.shortcuts import render
-from .forms import UserCreationForm, UserAuthForm, UserRestoreForm, UserEditForm, UserUpToAdminForm
+from .forms import UserCreationForm, UserAuthForm, UserRestoreForm, UserEditForm, UserUpToAdminForm, UserPasswordChange
 from .models import CustomUser
 from django.http import HttpResponseRedirect as HRR
 from django.contrib.auth import login, logout, authenticate
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
 from django.conf import settings
+from django.contrib.auth.hashers import make_password
 import random
 
 
@@ -150,6 +151,37 @@ def user_change(request):
                     'header': 'Пожалуйста, проверьте правильность введенных данных и попробуйте еще раз'})
         else:
             return render(request, 'log_must_error.html')
+
+
+def pass_change(request):
+    if request.method == 'GET':
+        return render(request, 'password_change.html', {'change_form': UserPasswordChange})
+    else:
+        form = UserPasswordChange(request.POST)
+        if form.is_valid():
+            if request.user.is_authenticated:
+                last_password = form.cleaned_data['password1']
+                if authenticate(request, email=request.user.email, password=last_password) is not None:
+                    new_password1 = form.cleaned_data['password2']
+                    new_password2 = form.cleaned_data['password3']
+                    if new_password1 == new_password2:
+                        request.user.set_password(new_password1)
+                        request.user.save()
+                        return HRR(f'/users/user/{request.user.id}')
+                    else:
+                        return render(request, 'password_change.html', {
+                            'change_form': UserPasswordChange,
+                            'header': 'Введенные вами новые пароли не совпадают'})
+                else:
+                    return render(request, 'password_change.html', {
+                        'change_form': UserPasswordChange,
+                        'header': 'Введенный прошлый пароль неверен'})
+            else:
+                return HRR('/permission_deny')
+        else:
+            return render(request, 'password_change.html', {
+                'change_form': UserPasswordChange,
+                'header': 'Пожалуйста, проверьте правильность введенных данных и попробуйте еще раз'})
 
 
 def make_admin(request):

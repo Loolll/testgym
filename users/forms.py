@@ -31,3 +31,9 @@ class UserEditForm(forms.Form):
 
 class UserUpToAdminForm(forms.Form):
     sid = forms.CharField(required=True, max_length=100, widget=forms.HiddenInput)
+
+
+class UserPasswordChange(forms.Form):
+    password1 = forms.CharField(label='Ваш старый пароль:', widget=forms.PasswordInput, min_length=6, max_length=50)
+    password2 = forms.CharField(label='Ваш новый пароль:', widget=forms.PasswordInput, min_length=6, max_length=50)
+    password3 = forms.CharField(label='Повторите новый пароль:', widget=forms.PasswordInput, min_length=6, max_length=50)

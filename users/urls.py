@@ -23,4 +23,5 @@ urlpatterns = [
     path('user/<int:pk>/', ProfileView.as_view(template_name='profile.html')),
     path('makeadmin/', views.make_admin),
     path('user/change/', views.user_change),
+    path('user/changepassword/', views.pass_change),
 ]
