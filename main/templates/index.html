@@ -290,7 +290,14 @@
         <div class="row" align="center">
         {% for product in products %}
         <div class="card ml-1 mr-1 mt-2" style="width: 18rem;">
-            <a href="/product/{{product.id}}"><img src="{% static 'products/' %}{{product.imgpath}}.png" class="card-img-top" alt=""></a>
+            <a href="/product/{{product.id}}" style="position: relative;">
+                <img src="{% static 'products/' %}{{product.imgpath}}.png" class="card-img-top img-responsive" alt="">
+                <h1 align="right" style="position: absolute; right: 0; top:0; width: 100%;">
+                    <a href="/add/in/?in=star&id={{product.id}}" >
+                        <i class="fas fa-star fa-1x" style="color: yellow; font-size: 30px">
+
+                        </i></a></h1>
+            </a>
             <div class="card-body">
                 <h5 class="card-title">
                     <a class="text-info" style="font-weight: 700; font-size: 25px" href="/product/{{product.id}}">{{product.name}}</a></h5>
@@ -298,58 +305,33 @@
                 <div class="row">
                     <div class="col-md-6">
                         {% if product.discount != -1 %}
-                        <span style="font-size: 25px; color: grey; font-weight: 700">{{product.discount}}&nbspр</span>
+                        <span style="font-size: 20px; color: grey;">{{product.discount}}&nbspр</span>
                         <br>
-                        <span style="font-size: 19px; color: orange; font-weight: 600; text-decoration: line-through;">
+                        <span style="font-size: 18px; color: orange;  text-decoration: line-through;">
                             {{product.price}}&nbspр</span>
                         {% else %}
-                        <span style="font-size: 25px; color: grey; font-weight: 700">{{product.price}}&nbspр</span>
+                        <span style="font-size: 20px; color: grey; ">{{product.price}}&nbspр</span>
                         {% endif %}
                         <br>
                     </div>
                     <div class="col-md-6">
-                        <a href="/add/in/?in=cart&id={{product.id}}"><img src="{% static 'cart.png' %}" height="40px"></a>
-                        <a href="/add/in/?in=star&id={{product.id}}"><img src="{% static 'star.png' %}" width="40px"></a>
+                        <a href="/add/in/?in=cart&id={{product.id}}" class="btn btn-info">Купить</a>
                         <div class="mt-2">
                         {% if product.count > 0 %}
 
                             {% if product.count > 3 %}
                             {% if product.count > 9 %}
-                                <span style="display: block;
-                                              background: green;
-                                              border-radius: 100%;
-                                              height: 30px;
-                                              width: 30px;
-                                              margin: 0;">
-                                </span>
+                                <i class="fas fa-circle" style="color: green"></i> В наличии
                             {% else %}
-                                <span style="display: block;
-                                              background: yellow;
-                                              border-radius: 100%;
-                                              height: 30px;
-                                              width: 30px;
-                                              margin: 0;">
-                                </span>
+                                <i class="fas fa-circle" style="color: yellow"></i> В наличии немного
                             {% endif %}
 
                             {% else %}
-                                <span style="display: block;
-                                              background: red;
-                                              border-radius: 100%;
-                                              height: 30px;
-                                              width: 30px;
-                                              margin: 0;">
-                                </span>
+                                <i class="fas fa-circle" style="color: red"></i> В наличии мало
                             {% endif %}
                         {% else %}
                             <div class="col-md-2">
-                                <span style="display: block;
-                                              background: black;
-                                              border-radius: 100%;
-                                              height: 30px;
-                                              width: 30px;
-                                              margin: 0;">
-                                </span>
+                                <i class="fas fa-circle" style="color: black"></i> Нет в наличии
                             </div>
                         {% endif %}
                         </div>
