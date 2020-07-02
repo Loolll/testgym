@@ -4,7 +4,7 @@
 
 <br><br><br>
 <div class="container" style="">
-    <div class="row" style="border: solid lightgrey 1.5px; border-bottom: solid lightgrey 4px">
+    <div class="row" style="border: solid lightgrey 1.5px; border-bottom: solid lightgrey 4px;">
         <div class="col-md-3 mt-2">
             <h4>Каталог</h4>
         </div>
@@ -38,14 +38,10 @@
                 document.getElementById('sh_max_count').value = params['max_count'];
                 document.getElementById('sh_brand').value = params['brand'];
                 document.getElementById('sh_group_by').value = params['group_by'];
-
-
-
-
             </script>
         </div>
     </div>
-    <div class="row mt-1" style="border: solid lightgrey 1.5px; border-bottom: solid lightgrey 4px; font-weight: 700">
+    <div class="row mt-1 pt-1 pb-1 pr-1" style="border: solid lightgrey 1.5px; border-bottom: solid lightgrey 4px; font-weight: 700">
         <div class="col-md-2">
             <div class="dropdown">
                 <a class="dropdown-toggle" type="button" id="dropdownMenuButtonCategory"
@@ -216,7 +212,7 @@
             <div class="dropdown">
                 <a class="dropdown-toggle" type="button" id="dropdownMenuButtonGroup"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Группировать
+                    Сортировать
                 </a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonGroup">
                     <a class="dropdown-item" href="" id="group_0">
@@ -289,12 +285,12 @@
         </script>
     </div>
 
-    <div class="mt-1" style="border-left: solid lightgrey 13px">
+    <div class="mt-1" style="border-left: solid lightgrey 0px">
         {% if products %}
         <div class="row" align="center">
         {% for product in products %}
-        <div class="card ml-1 mr-1" style="width: 18rem;">
-            <img src="{% static 'products/' %}{{product.imgpath}}.png" class="card-img-top" alt="">
+        <div class="card ml-1 mr-1 mt-2" style="width: 18rem;">
+            <a href="/product/{{product.id}}"><img src="{% static 'products/' %}{{product.imgpath}}.png" class="card-img-top" alt=""></a>
             <div class="card-body">
                 <h5 class="card-title">
                     <a class="text-info" style="font-weight: 700; font-size: 25px" href="/product/{{product.id}}">{{product.name}}</a></h5>
