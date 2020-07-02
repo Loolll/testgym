@@ -452,7 +452,7 @@ def rate_product(request):
         except exceptions.ObjectDoesNotExist:
             return HRR('/')
         try:
-            last_rate = Rates.objects.get(user=request.user)
+            last_rate = Rates.objects.get(user=request.user, product=product)
             if last_rate.rate == int(request.GET['rate']):
                 last_rate.delete()
             else:
