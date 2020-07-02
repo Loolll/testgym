@@ -321,7 +321,7 @@
                     <div class="col-md-6">
                         <a href="/add/in/?in=cart&id={{product.id}}" class="btn btn-info" id="in_cart_link_{{product.id}}">Купить</a>
                         <script>
-                            document.getElementById('in_cart_link_{{product.id}}').href = "/add/in/?in=star&id={{product.id}}&from=" +
+                            document.getElementById('in_cart_link_{{product.id}}').href = "/add/in/?in=cart&id={{product.id}}&from=" +
                                 document.location.href.replace('?', '~').split('&').join('№')
                         </script>
                         <div class="mt-2">
