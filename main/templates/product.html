@@ -1,73 +1,69 @@
-{% include 'wrapper.html' %}
+{% extends 'wrapper.html' %}
 {% load static %}
 {% block content %}
 <br><br><br>
 <div class="container" style="border: solid lightgrey 1px">
-    <h5 class="mt-2">Главная / {{product.category.name}} /</h5>
+    <h5 class="mt-2">Главная / <a href="/?category={{product.category.id}}">{{product.category.name}}</a> /</h5>
     <hr>
     <div class="row">
-        <div class="col-md-4">
-            <img src="{% static 'products/' %}{{product.imgpath}}.png" style="width: 300px; height: auto">
+        <div class="col-md-6">
+            <img src="{% static 'products/' %}{{product.imgpath}}.png" style="width: inherit; height: auto">
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="row">
                 <div class="card-body">
                     <h5 class="card-title">
-                        <a class="text-info" style="font-weight: 700; font-size: 25px" href="/product/{{product.id}}">{{product.name}}</a>
+                        <span style="font-weight: 700; font-size: 25px">{{product.name}}</span>
                     </h5>
                     <hr>
                     <div class="row">
                         <div class="col-md-6">
+                            <i class="fas fa-star" style="color: orange"></i>
+                            <i class="fas fa-star" style="color: orange"></i>
+                            <i class="fas fa-star" style="color: orange"></i>
+                            <i class="fas fa-star" style="color: orange"></i>
+                            <i class="fas fa-star" style="color: orange"></i>
+                            #TODO RATE
+                            <br>
+                            <a href="/add/in/?in=star&id={{product.id}}" style="color: grey">
+                                <i class="fas fa-star" style="color: black"></i> В избранное</a>
+                            <br>
+                            {% if product.count > 0 %}
+
+                            {% if product.count > 3 %}
+                            {% if product.count > 9 %}
+                                <i class="fas fa-circle" style="color: green"></i> В наличии
+                            {% else %}
+                                <i class="fas fa-circle" style="color: yellow"></i> В наличии немного
+                            {% endif %}
+
+                            {% else %}
+                                <i class="fas fa-circle" style="color: red"></i> В наличии мало
+                            {% endif %}
+                        {% else %}
+                            <div class="col-md-2">
+                                <i class="fas fa-circle" style="color: black"></i> Нет в наличии
+                            </div>
+                        {% endif %}
+                            <br>
+                            <i>Производитель: <span class="text-info" style="font-size: 25px; font-weight: 800">{{product.brand}}</span></i>
+                        </div>
+                        <div class="col-md-6 " style="background-color: #F7F7F7">
                             {% if product.discount != -1 %}
-                            <span style="font-size: 25px; color: grey; font-weight: 700">{{product.discount}}&nbspр</span>
+                            <span style="font-size: 25px; color: black; font-weight: 700">{{product.discount}}&nbspр</span>
                             <br>
                             <span style="font-size: 19px; color: orange; font-weight: 600; text-decoration: line-through;">
                             {{product.price}}&nbspр</span>
                             {% else %}
-                            <span style="font-size: 25px; color: grey; font-weight: 700">{{product.price}}&nbspр</span>
+                            <span style="font-size: 25px; color: black; font-weight: 700">{{product.price}}&nbspр</span>
                             {% endif %}
                             <br>
-                        </div>
-                        <div class="col-md-6">
-                            <a href="/add/in/?in=cart&id={{product.id}}"><img src="{% static 'cart.png' %}"
-                                                                              height="40px"></a>
-                            <a href="/add/in/?in=star&id={{product.id}}"><img src="{% static 'star.png' %}"
-                                                                              width="40px"></a>
+                            <a href="/add/in/?in=cart&id={{product.id}}" class="btn btn-danger">Добавить в корзину</a>
+
                         </div>
                     </div>
                     <hr>
-                    {% if product.count > 0 %}
-                    <div class="row">
-                        <div class="col-md-2">
-                        <span style="display: block;
-                                      background: green;
-                                      border-radius: 100%;
-                                      height: 20px;
-                                      width: 20px;
-                                      margin: 0;">
-                        </span>
-                        </div>
-                        <div class="col-md-10">
-                            В наличии {{product.count}}шт
-                        </div>
-                    </div>
-                    {% else %}
-                    <div class="row">
-                        <div class="col-md-2">
-                        <span style="display: block;
-                                      background: red;
-                                      border-radius: 100%;
-                                      height: 20px;
-                                      width: 20px;
-                                      margin: 0;">
-                        </span>
-                        </div>
-                        <div class="col-md-10">
-                            Нет в наличии
-                        </div>
-                    </div>
-                    {% endif %}
-                    <i>Производитель: <span class="text-info" style="font-size: 25px; font-weight: 800">{{product.brand}}</span></i>
+                    <p style="color:grey">{{product.description}}</p>
                 </div>
             </div>
         </div>
@@ -78,83 +74,74 @@
         <a href="/product/edit?id={{product.id}}" class="btn btn-warning" style="width: 150px">Редактировать</a>
     </div>
     {% endif %}
+
     <hr>
-    <p>{{product.description}}</p>
-    <hr>
-    <h2 align="center"><b>Вместе с этим товаром покупают:</b></h2>
+    <h4 align="center"><b>Вместе с этим товаром покупают:</b></h4>
     <hr>
     <div class="row">
         {% for recommend in recommendations %}
         {% if recommend.id != product.id %}
-        <div class="card ml-1 mr-1" style="width: 18rem;">
-            <img src="{% static 'products/' %}{{recommend.imgpath}}.png" class="card-img-top" alt="">
+        {% with recommend as product %}
+        <div class="card ml-1 mr-1 mt-2" style="width: 18rem;">
+            <a href="/product/{{product.id}}" style="position: relative;">
+                <img src="{% static 'products/' %}{{product.imgpath}}.png" class="card-img-top img-responsive" alt="">
+                <h1 align="right" style="position: absolute; right: 0; top:0; width: 100%;">
+                    <a href="/add/in/?in=star&id={{product.id}}" id="in_star_link_{{product.id}}">
+                        <i class="fas fa-star fa-1x" style="color: yellow; font-size: 30px">
+
+                        </i></a></h1>
+                <script>
+                    document.getElementById('in_star_link_{{product.id}}').href = "/add/in/?in=star&id={{product.id}}&from=" +
+                     document.location.href.replace('?', '~').split('&').join('№')
+                </script>
+            </a>
             <div class="card-body">
                 <h5 class="card-title">
-                    <a class="text-info" style="font-weight: 700; font-size: 25px" href="/recommend/{{recommend.id}}">{{recommend.name}}</a>
-                </h5>
+                    <a class="text-info" style="font-weight: 700; font-size: 25px" href="/product/{{product.id}}">{{product.name}}</a></h5>
                 <hr>
                 <div class="row">
                     <div class="col-md-6">
-                        {% if recommend.discount != -1 %}
-                        <span style="font-size: 25px; color: grey; font-weight: 700">{{recommend.discount}}&nbspр</span>
+                        {% if product.discount != -1 %}
+                        <span style="font-size: 20px; color: grey;">{{product.discount}}&nbspр</span>
                         <br>
-                        <span style="font-size: 19px; color: orange; font-weight: 600; text-decoration: line-through;">
-                            {{recommend.price}}&nbspр</span>
+                        <span style="font-size: 18px; color: orange;  text-decoration: line-through;">
+                            {{product.price}}&nbspр</span>
                         {% else %}
-                        <span style="font-size: 25px; color: grey; font-weight: 700">{{recommend.price}}&nbspр</span>
+                        <span style="font-size: 20px; color: grey; ">{{product.price}}&nbspр</span>
                         {% endif %}
                         <br>
                     </div>
                     <div class="col-md-6">
-                        <a href="/add/in/?in=cart&id={{recommend.id}}"><img src="{% static 'cart.png' %}" height="40px"></a>
-                        <a href="/add/in/?in=star&id={{recommend.id}}"><img src="{% static 'star.png' %}" width="40px"></a>
+                        <a href="/add/in/?in=cart&id={{product.id}}" class="btn btn-info" id="in_cart_link_{{product.id}}">Купить</a>
+                        <script>
+                            document.getElementById('in_cart_link_{{product.id}}').href = "/add/in/?in=star&id={{product.id}}&from=" +
+                                document.location.href.replace('?', '~').split('&').join('№')
+                        </script>
                         <div class="mt-2">
-                        {% if recommend.count > 0 %}
+                        {% if product.count > 0 %}
 
-                            {% if recommend.count > 3 %}
-                            {% if recommend.count > 9 %}
-                                <span style="display: block;
-                                              background: green;
-                                              border-radius: 100%;
-                                              height: 30px;
-                                              width: 30px;
-                                              margin: 0;">
-                                </span>
+                            {% if product.count > 3 %}
+                            {% if product.count > 9 %}
+                                <i class="fas fa-circle" style="color: green"></i> В наличии
                             {% else %}
-                                <span style="display: block;
-                                              background: yellow;
-                                              border-radius: 100%;
-                                              height: 30px;
-                                              width: 30px;
-                                              margin: 0;">
-                                </span>
+                                <i class="fas fa-circle" style="color: yellow"></i> В наличии немного
                             {% endif %}
 
                             {% else %}
-                                <span style="display: block;
-                                              background: red;
-                                              border-radius: 100%;
-                                              height: 30px;
-                                              width: 30px;
-                                              margin: 0;">
-                                </span>
+                                <i class="fas fa-circle" style="color: red"></i> В наличии мало
                             {% endif %}
                         {% else %}
                             <div class="col-md-2">
-                                <span style="display: block;
-                                              background: black;
-                                              border-radius: 100%;
-                                              height: 30px;
-                                              width: 30px;
-                                              margin: 0;">
-                                </span>
+                                <i class="fas fa-circle" style="color: black"></i> Нет в наличии
                             </div>
                         {% endif %}
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
+        {% endwith %}
         {% endif %}
         {% endfor %}
     </div>

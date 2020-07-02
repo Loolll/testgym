@@ -293,10 +293,14 @@
             <a href="/product/{{product.id}}" style="position: relative;">
                 <img src="{% static 'products/' %}{{product.imgpath}}.png" class="card-img-top img-responsive" alt="">
                 <h1 align="right" style="position: absolute; right: 0; top:0; width: 100%;">
-                    <a href="/add/in/?in=star&id={{product.id}}" >
+                    <a href="/add/in/?in=star&id={{product.id}}" id="in_star_link_{{product.id}}">
                         <i class="fas fa-star fa-1x" style="color: yellow; font-size: 30px">
 
                         </i></a></h1>
+                <script>
+                    document.getElementById('in_star_link_{{product.id}}').href = "/add/in/?in=star&id={{product.id}}&from=" +
+                     document.location.href.replace('?', '~').split('&').join('№')
+                </script>
             </a>
             <div class="card-body">
                 <h5 class="card-title">
@@ -315,7 +319,11 @@
                         <br>
                     </div>
                     <div class="col-md-6">
-                        <a href="/add/in/?in=cart&id={{product.id}}" class="btn btn-info">Купить</a>
+                        <a href="/add/in/?in=cart&id={{product.id}}" class="btn btn-info" id="in_cart_link_{{product.id}}">Купить</a>
+                        <script>
+                            document.getElementById('in_cart_link_{{product.id}}').href = "/add/in/?in=star&id={{product.id}}&from=" +
+                                document.location.href.replace('?', '~').split('&').join('№')
+                        </script>
                         <div class="mt-2">
                         {% if product.count > 0 %}
 

@@ -299,8 +299,8 @@ def add_in_cart_or_favorite(request):
                                 favorite.save()
                             else:
                                 Favorites.objects.create(product=product, user=anonym, ip=ip, count=1)
-
-                    return HRR(f'/product/{product_id}/')
+                    url = default_include_undefined_for_get_request(request, 'from', '/')
+                    return HRR(url.replace('~', '?').replace('№', '&'))
             else:
                 return HRR('/args_error/')
         return HRR('/args_error/')
