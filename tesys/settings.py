@@ -24,7 +24,7 @@ SECRET_KEY = '&@+%bm06q)*b6pk4^-@84aw!q7*($+o69stwps02du16$r-ndf'
 ANONIM_PASSWORD = 'qmMezRCtBa65dM8mbgrNY5a72N3QXvXuKSY4zymR'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['45.132.18.159', '127.0.0.1']
 

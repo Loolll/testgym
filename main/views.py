@@ -463,4 +463,4 @@ def rate_product(request):
 
         return HRR(f'/product/{product.id}')
     else:
-        return HRR('/auth/')
+        return HRR('/users/auth/')

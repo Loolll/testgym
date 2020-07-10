@@ -20,9 +20,9 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')
     name = models.CharField(max_length=150, verbose_name='Название')
     description = models.CharField(max_length=1000, verbose_name='Описание')
-    price = models.IntegerField(verbose_name='Стоимость')
+    price = models.FloatField(verbose_name='Стоимость')
     count = models.IntegerField(verbose_name='Колличество')
-    discount = models.IntegerField(verbose_name='Стоимость по скидке', default=-1)
+    discount = models.FloatField(verbose_name='Стоимость по скидке', default=-1)
     imgpath = models.CharField(max_length=1000, verbose_name='Путь к картинке')
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, verbose_name='Бренд')
 

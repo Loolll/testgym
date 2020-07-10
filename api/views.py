@@ -82,11 +82,11 @@ def product_edit_form_valid(data):
             return 'Описание слишком длинное'
 
     with suppress(Exception):
-        if not all([x.lower() in '0123456789' for x in data['price']]):
+        if not all([x.lower() in ',.0123456789' for x in data['price']]):
             return 'Цена содерждит запрещенные символы'
 
     with suppress(Exception):
-        if not all([x.lower() in '0123456789' for x in data['discount']]):
+        if not all([x.lower() in ',.0123456789' for x in data['discount']]):
             return 'Скидка содерждит запрещенные символы'
 
     with suppress(Exception):
@@ -120,13 +120,13 @@ def product_create_form_valid(data):
         return "Описание не указано"
 
     try:
-        if not all([x.lower() in '0123456789' for x in data['price']]):
+        if not all([x.lower() in '.,0123456789' for x in data['price']]):
             return 'Цена содерждит запрещенные символы'
     except:
         return "Цена не указана"
 
     with suppress(Exception):
-        if not all([x.lower() in '-0123456789' for x in data['discount']]):
+        if not all([x.lower() in '.,-0123456789' for x in data['discount']]):
             return 'Скидка содерждит запрещенные символы'
 
     try:
